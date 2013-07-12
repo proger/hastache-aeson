@@ -1,14 +1,14 @@
 name:                hastache-aeson
 version:             0.1.0.0
 license:             BSD3
+Homepage:            https://github.com/proger/hastache-aeson
 
-copyright:           Vladimir Kirillov (c) 2013
+copyright:           Vladimir Kirillov
 author:              Vladimir Kirillov <proger@hackndev.com>
 maintainer:          Vladimir Kirillov <proger@hackndev.com>
 
 synopsis:            render aeson values as hastache templates
 description:         
-    see <https://github.com/proger/hastache-aeson>
 
 category:            Text
 build-type:          Simple
