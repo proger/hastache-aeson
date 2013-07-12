@@ -16,6 +16,7 @@ import qualified Data.Text as T
 import Control.Monad
 import Control.Applicative
 import qualified Data.Foldable as Foldable
+import Data.Maybe (fromMaybe)
 
 import qualified Data.Map as Map
 import qualified Data.Vector as V
@@ -48,14 +49,11 @@ buildMap name m value = Map.insert (encodeStr name) muValue m
                       t -> MuVariable $ show t
 
 buildName name newName
-    | length name > 0 = concat [name, ".", newName]
+    | not (null name) = concat [name, ".", newName]
     | otherwise = newName
 
 foldObject name m k v = buildMap (buildName name (T.unpack k)) m v
 
-buildMapContext m a = return $ case Map.lookup a m of
-    Nothing ->
-        case a == BS.pack "." of
-            True -> maybe MuNothing id $ Map.lookup BS.empty m
-            _ -> MuNothing
-    Just a -> a
+buildMapContext m a = return $ fromMaybe
+    (if a == BS.pack "." then maybe MuNothing id $ Map.lookup BS.empty m else MuNothing)
+    (Map.lookup a m)

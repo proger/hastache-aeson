@@ -1,7 +1,6 @@
 name:                hastache-aeson
 version:             0.1.0.0
-license:             MIT
--- license-file:        LICENSE
+license:             BSD3
 
 copyright:           Vladimir Kirillov (c) 2013
 author:              Vladimir Kirillov <proger@hackndev.com>
