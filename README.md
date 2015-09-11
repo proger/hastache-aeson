@@ -1,6 +1,8 @@
 hastache-aeson
 ==============
 
+[![Build Status](https://travis-ci.org/proger/hastache-aeson.svg?branch=master)](https://travis-ci.org/proger/hastache-aeson)
+
 * Lets you pass [aeson](http://hackage.haskell.org/package/aeson) `Value` as `MuContext` to [hastache](http://hackage.haskell.org/package/hastache)
 * Since [yaml](http://hackage.haskell.org/package/yaml) is API-compatible to `aeson`, you can also render `yaml` `Value`s.
 
