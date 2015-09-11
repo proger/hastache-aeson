@@ -1,7 +1,7 @@
 name:                hastache-aeson
 version:             0.1.1.0
 license:             BSD3
-license-file:        README.md
+license-file:        LICENSE
 homepage:            https://github.com/proger/hastache-aeson
 bug-reports:         https://github.com/proger/hastache-aeson/issues
 
