@@ -1,5 +1,5 @@
 name:                hastache-aeson
-version:             0.1.0.0
+version:             0.2.0.0
 license:             BSD3
 license-file:        README.md
 homepage:            https://github.com/proger/hastache-aeson
@@ -10,24 +10,24 @@ author:              Vladimir Kirillov <proger@hackndev.com>
 maintainer:          Vladimir Kirillov <proger@hackndev.com>
 
 synopsis:            render hastache templates using aeson values
-description:         
+description:
     The Module lets you render Hastache templates from aeson values. See the GitHub page for examples.
 
 category:            Text
 build-type:          Simple
-cabal-version:       >=1.8
+cabal-version:       >=1.22
 
 library
   exposed-modules:     Text.Hastache.Aeson
-  -- other-modules:       
-  build-depends:       base ==4.6.*
-                     , hastache ==0.5.*
-                     , aeson ==0.6.*
-                     , attoparsec ==0.10.*
+  -- other-modules:
+  build-depends:       base ==4.8.*
+                     , hastache ==0.6.*
+                     , aeson ==0.8.*
+                     , scientific ==0.3.*
                      , unordered-containers ==0.2.*
                      , vector ==0.10.*
                      , containers ==0.5.*
-                     , text ==0.11.*
+                     , text == 1.2.*
                      , bytestring ==0.10.*
 
 source-repository head

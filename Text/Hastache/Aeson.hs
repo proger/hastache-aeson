@@ -21,18 +21,25 @@ import Data.Maybe (fromMaybe)
 import qualified Data.Map as Map
 import qualified Data.Vector as V
 import qualified Data.HashMap.Strict as HM
-import Data.Attoparsec.Number (Number(I, D))
+import Data.Scientific
 
 import Data.Aeson.Types
 
-import Text.Hastache 
-import Text.Hastache.Context 
+import Text.Hastache
+import Text.Hastache.Context
 
 jsonValueContext :: Monad m => Value -> MuContext m
-jsonValueContext v = buildMapContext $ valueMap v
+jsonValueContext = buildMapContext . valueMap
 
+valueMap :: Monad m => Value -> Map.Map T.Text (MuType m)
 valueMap v = buildMap "" Map.empty v
 
+buildMap
+  :: Monad m =>
+     String
+     -> Map.Map T.Text (MuType m)
+     -> Value
+     -> Map.Map T.Text (MuType m)
 buildMap name m (Object obj) =
     Map.insert (encodeStr name)
       (MuList [buildMapContext $ HM.foldlWithKey' (foldObject "") Map.empty obj])
@@ -41,19 +48,28 @@ buildMap name m value = Map.insert (encodeStr name) muValue m
     where
         muValue = case value of
                       Array arr -> MuList . V.toList $ fmap jsonValueContext arr
-                      Number (D float) -> MuVariable float
-                      Number (I int) -> MuVariable int
+                      Number n -> case floatingOrInteger n of
+                                    Left d  -> MuVariable (d :: Double)
+                                    Right i -> MuVariable (i :: Integer)
                       String s -> MuVariable s
                       Bool b -> MuBool b
                       Null -> MuNothing
                       t -> MuVariable $ show t
 
-buildName name newName
-    | not (null name) = concat [name, ".", newName]
-    | otherwise = newName
+buildName :: String -> String -> String
+buildName   "" newName = newName
+buildName name newName = name ++ "." ++ newName
 
+foldObject ::
+  Monad m =>
+     String
+     -> Map.Map T.Text (MuType m)
+     -> T.Text
+     -> Value
+     -> Map.Map T.Text (MuType m)
 foldObject name m k v = buildMap (buildName name (T.unpack k)) m v
 
+buildMapContext :: Monad m => Map.Map T.Text (MuType m) -> MuContext m
 buildMapContext m a = return $ fromMaybe
-    (if a == BS.pack "." then maybe MuNothing id $ Map.lookup BS.empty m else MuNothing)
+    (if a == T.pack "." then maybe MuNothing id $ Map.lookup T.empty m else MuNothing)
     (Map.lookup a m)
