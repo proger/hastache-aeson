@@ -22,6 +22,7 @@ import qualified Data.Map as Map
 import qualified Data.Vector as V
 import qualified Data.HashMap.Strict as HM
 import Data.Scientific
+import Data.Monoid ((<>))
 
 import Data.Aeson.Types
 
@@ -36,15 +37,15 @@ valueMap v = buildMap "" Map.empty v
 
 buildMap
   :: Monad m =>
-     String
+     T.Text
      -> Map.Map T.Text (MuType m)
      -> Value
      -> Map.Map T.Text (MuType m)
 buildMap name m (Object obj) =
-    Map.insert (encodeStr name)
+    Map.insert name
       (MuList [buildMapContext $ HM.foldlWithKey' (foldObject "") Map.empty obj])
       (HM.foldlWithKey' (foldObject name) m obj)
-buildMap name m value = Map.insert (encodeStr name) muValue m
+buildMap name m value = Map.insert name muValue m
     where
         muValue = case value of
                       Array arr -> MuList . V.toList $ fmap jsonValueContext arr
@@ -56,20 +57,20 @@ buildMap name m value = Map.insert (encodeStr name) muValue m
                       Null -> MuNothing
                       t -> MuVariable $ show t
 
-buildName :: String -> String -> String
+buildName :: T.Text -> T.Text -> T.Text
 buildName   "" newName = newName
-buildName name newName = name ++ "." ++ newName
+buildName name newName = name <> "." <> newName
 
 foldObject ::
   Monad m =>
-     String
+     T.Text
      -> Map.Map T.Text (MuType m)
      -> T.Text
      -> Value
      -> Map.Map T.Text (MuType m)
-foldObject name m k v = buildMap (buildName name (T.unpack k)) m v
+foldObject name m k v = buildMap (buildName name k) m v
 
 buildMapContext :: Monad m => Map.Map T.Text (MuType m) -> MuContext m
 buildMapContext m a = return $ fromMaybe
-    (if a == T.pack "." then maybe MuNothing id $ Map.lookup T.empty m else MuNothing)
+    (if a == "." then maybe MuNothing id $ Map.lookup T.empty m else MuNothing)
     (Map.lookup a m)
