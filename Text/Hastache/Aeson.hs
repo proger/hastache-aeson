@@ -10,12 +10,8 @@ module Text.Hastache.Aeson (
       jsonValueContext
     ) where
 
-import qualified Data.ByteString.Char8 as BS
 import qualified Data.Text as T
 
-import Control.Monad
-import Control.Applicative
-import qualified Data.Foldable as Foldable
 import Data.Maybe (fromMaybe)
 
 import qualified Data.Map as Map
@@ -27,7 +23,6 @@ import Data.Monoid ((<>))
 import Data.Aeson.Types
 
 import Text.Hastache
-import Text.Hastache.Context
 
 jsonValueContext :: Monad m => Value -> MuContext m
 jsonValueContext = buildMapContext . valueMap
