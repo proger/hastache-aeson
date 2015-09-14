@@ -25,5 +25,5 @@ before_install:
 
 script:
   - stack --no-terminal --skip-ghc-check setup
-  - stack --no-terminal --skip-ghc-check --ghc-options "-Wall -Werror" build
-  - stack --no-terminal --skip-ghc-check --ghc-options "-Wall -Werror" test
+  - stack --no-terminal --skip-ghc-check build --ghc-options "-Wall -Werror"
+  - stack --no-terminal --skip-ghc-check test  --ghc-options "-Wall -Werror"
