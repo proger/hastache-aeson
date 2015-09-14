@@ -6,12 +6,10 @@ import Test.Tasty
 import Test.Tasty.HUnit
 import Text.Hastache
 import Text.Hastache.Aeson
-import Text.Hastache.Context
 
 import Data.Maybe (fromJust)
-import Data.Aeson
+import Data.Aeson hiding (json)
 
-import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as LBS
 
 import Data.Text as T
@@ -43,8 +41,7 @@ tests = testGroup "Integration Tests" [
 
 assertTemplate :: LT.Text -> LBS.ByteString -> T.Text -> Assertion
 assertTemplate expectedResult json template =
-  assertEqual "Unexpected rendering result" expectedResult =<< render json template
-
-render json template =
-  let value = fromJust $ decode json
-  in hastacheStr defaultConfig template $ jsonValueContext value
+    assertEqual "Unexpected rendering result" expectedResult =<< rendered
+  where
+    value = fromJust $ decode json
+    rendered = hastacheStr defaultConfig template $ jsonValueContext value
